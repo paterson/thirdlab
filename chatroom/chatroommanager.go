@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"github.com/paterson/secondlab/httpserver"
 )
 
@@ -29,14 +30,13 @@ func (manager *ChatroomManager) HasNewConnection(conn net.Conn) {
 	client := Client{Connection: conn}
 	manager.Clients = append(manager.Clients, client)
 	fmt.Println("New Client Connected")
-	fmt.Println("Clients:", manager.Clients)
 	go manager.listen(client)
 }
 
 func (manager ChatroomManager) listen(client Client) {
 	for {
 		input, _ := httpserver.Read(client.Connection)
-		fmt.Println("Received:", input)
+		fmt.Println("Received:", strings.TrimSpace(input))
 		manager.inputs <- ChatroomInput{Input: input, Client: client}
 	}
 }
@@ -45,7 +45,6 @@ func (manager ChatroomManager) waitForInput() {
 	for chatroomInput := range manager.inputs {
 		action := NewAction(chatroomInput.Input, chatroomInput.Client)
 		chatroom, err := manager.findChatroomForAction(action)
-		fmt.Println("Chatrooms:", manager.chatrooms, err)
 		if err == nil {
 			chatroom.Actions <- action
 		}
@@ -55,7 +54,6 @@ func (manager ChatroomManager) waitForInput() {
 func (manager *ChatroomManager) findChatroomForAction(action Action) (Chatroom, error) {
 	if action.actionType() == JoinRequestActionType {
 		joinRequest := action.(JoinRequest)
-		fmt.Println(manager)
 		for _, chatroom := range manager.chatrooms {
 			if chatroom.Name == joinRequest.ChatroomName {
 				return chatroom, nil
@@ -85,6 +83,6 @@ func (manager *ChatroomManager) createNewChatroom(joinRequest JoinRequest) Chatr
 	chatroom := Chatroom{Name: joinRequest.ChatroomName, ID: strconv.Itoa(len(manager.chatrooms)), Actions: make(chan Action)}
 	go chatroom.wait()
 	manager.chatrooms = append(manager.chatrooms, chatroom)
-	fmt.Println("Created new chatroom", chatroom.Name, manager.chatrooms)
+	fmt.Println("Created new chatroom", chatroom.Name)
 	return chatroom
 }

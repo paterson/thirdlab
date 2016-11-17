@@ -3,7 +3,6 @@ package chatroom
 import (
 	"strconv"
 	"errors"
-	"fmt"
 )
 
 type Chatroom struct {
@@ -15,7 +14,6 @@ type Chatroom struct {
 
 func (chatroom Chatroom) broadcast(m Message) {
 	for _, member := range chatroom.Members {
-		fmt.Println("Member:", member)
 		member.SendMessage(m)
 	}
 }
