@@ -14,6 +14,8 @@ func main() {
 	listener, err := httpserver.Listen()
 	checkError(err)
 
+	chatroomManager = chatroom.NewChatroomManager()
+	
 	for {
 		connection, err := listener.Accept() // Accept incoming connection
 		checkError(err)

@@ -1,41 +1,61 @@
 package chatroom
 
+import (
+	"strconv"
+	"errors"
+	"fmt"
+)
+
 type Chatroom struct {
 	ID      string
 	Name    string
-	Clients []Client
+	Members []Member
 	Actions chan Action
 }
 
 func (chatroom Chatroom) broadcast(m Message) {
-	for _, client := range chatroom.Clients {
-		client.sendMessage(m, chatroom)
+	for _, member := range chatroom.Members {
+		fmt.Println("Member:", member)
+		member.SendMessage(m)
 	}
 }
 
-func (chatroom Chatroom) addClient(c Client) {
-	if !chatroom.isMember(c) {
-		chatroom.Clients = append(chatroom.Clients, c)
+func (chatroom *Chatroom) addClient(c Client) {
+	if !chatroom.memberExistsWithClient(c) {
+		member := Member{Client: c, Chatroom: *chatroom, ID: strconv.Itoa(len(chatroom.Members))}
+		chatroom.Members = append(chatroom.Members, member)
+		member.SendJoinMessage()
+		announcement := Message{ChatroomID: chatroom.ID, Author: ChatroomBot, Text: c.Name + " has joined the room"}
+		chatroom.broadcast(announcement) // Send message to chatroom that client has been added
 	}
-	var message = Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has joined the room"}
-	chatroom.broadcast(message) // Send message to chatroom that client has been added
 }
 
-func (chatroom Chatroom) removeClient(c Client) {
-	if chatroom.isMember(c) {
+func (chatroom *Chatroom) removeClient(c Client) {
+	if chatroom.memberExistsWithClient(c) {
 		//chatroom.Clients // remove...
+		member, _ := chatroom.findMemberByClient(c)
+		member.SendLeaveMessage()
+		var message = Message{ChatroomID: chatroom.ID, Author: ChatroomBot, Text: c.Name + " has left the room"}
+		chatroom.broadcast(message) // Send message to chatroom that client has been left
 	}	
-	var message = Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has left the room"}
-	chatroom.broadcast(message) // Send message to chatroom that client has been left
 }
 
-func (chatroom Chatroom) isMember(c Client) bool {
-	for _, client := range chatroom.Clients {
-		if client == c {
+func (chatroom Chatroom) memberExistsWithClient(c Client) bool {
+	for _, member := range chatroom.Members {
+		if member.Client == c {
 			return true
 		}
 	}
 	return false
+}
+
+func (chatroom Chatroom) findMemberByClient(c Client) (Member, error) {
+	for _, member := range chatroom.Members {
+		if member.Client == c {
+			return member, nil
+		}
+	}
+	return Member{}, errors.New("Not found")
 }
 
 func (chatroom Chatroom) wait() {

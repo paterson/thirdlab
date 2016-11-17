@@ -2,7 +2,6 @@ package chatroom
 
 import (
 	"strings"
-	"fmt"
 )
 
 type ActionType int
@@ -22,9 +21,7 @@ type Action interface {
 func NewAction(input string, client Client) Action {
 	dict := inputToDictionary(input)
 	actionType := actionTypeFromDictionary(dict)
-	fmt.Println(dict)
-	client.Name = dict["CLIENT_NAME"] // Update Client's name every time 
-
+	client.Name = dict["CLIENT_NAME"] // Update Client's name every time
 	switch actionType {
 		case MessageActionType:           return Message{ChatroomID: dict["CHAT"], Text: dict["MESSAGE"], Author: client}
 		case JoinRequestActionType:       return JoinRequest{ChatroomName: dict["JOIN_CHATROOM"], Client: client}
@@ -40,11 +37,11 @@ func NewAction(input string, client Client) Action {
 //        ["JOINED_CHATROOM": chatroom_name, "SERVER_IP": IP_address]
 func inputToDictionary(input string) map[string]string {
 	dict := make(map[string]string)
-	lines := strings.Split(input, "\n")
+	lines := strings.Split(input, ",")
 	for _, line := range lines {
 		segments := strings.Split(line, ":")
 		if len(segments) > 1 {
-	 		dict[segments[0]] = strings.TrimSpace(segments[1])
+	 		dict[strings.TrimSpace(segments[0])] = strings.TrimSpace(segments[1])
 	 	}
 	}
 	return dict
