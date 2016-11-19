@@ -48,7 +48,6 @@ func (manager ChatroomManager) pollClient(client Client) {
 			fmt.Println("Received:", strings.TrimSpace(input))
 			manager.input <- Input{Text: strings.TrimSpace(input), Client: client}
 		}
-		fmt.Println(err)
 		connected = err == io.EOF // Check if client is disconnected
 	}
 }
