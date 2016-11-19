@@ -114,7 +114,7 @@ func (manager *ChatroomManager) createNewChatroom(joinRequest JoinRequest) Chatr
 func (manager *ChatroomManager) handleAuxiliaryRequests(input Input) bool {
 	if strings.HasPrefix(input.Text, HELO_TEXT) {
 		suffix := input.Text[len(HELO_TEXT):len(input.Text)]
-		response := fmt.Sprintf("HELO %sIP:10.62.0.92\nPort:%s\nStudentID:12305503\n", suffix, httpserver.Port())
+		response := fmt.Sprintf("HELO %s\nIP:10.62.0.92\nPort:%s\nStudentID:12305503\n", suffix, httpserver.Port())
 		input.Client.Connection.Write([]byte(response))
 		input.Client.Connection.Close()
 		return false
