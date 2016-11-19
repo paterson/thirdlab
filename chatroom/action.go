@@ -2,7 +2,6 @@ package chatroom
 
 import (
 	"strings"
-	"fmt"
 )
 
 type ActionType int
