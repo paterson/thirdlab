@@ -13,9 +13,9 @@ type Member struct {
 
 func (member Member) SendMessage(m Message) {
 	lines := []string{
-		"CHAT: " + member.Chatroom.ID,
-		"CLIENT_NAME: " + m.Author.Name,
-		"MESSAGE: " + m.Text + "\n\n",
+		"CHAT:" + member.Chatroom.ID,
+		"CLIENT_NAME:" + m.Author.Name,
+		"MESSAGE:" + m.Text + "\n\n",
 	}
 	str := strings.Join(lines, "\n")
 	member.Client.Connection.Write([]byte(str))
@@ -24,10 +24,10 @@ func (member Member) SendMessage(m Message) {
 func (member Member) SendJoinMessage() {
 	lines := []string{
 		"JOINED_CHATROOM:" + member.Chatroom.Name,
-		"SERVER_IP: " + httpserver.IPAddress(),
-		"PORT: " + httpserver.Port(),
-		"ROOM_REF: " + member.Chatroom.ID,
-		"JOIN_ID: " + member.ID + "\n\n",
+		"SERVER_IP:" + httpserver.IPAddress(),
+		"PORT:" + httpserver.Port(),
+		"ROOM_REF:" + member.Chatroom.ID,
+		"JOIN_ID:" + member.ID + "\n\n",
 	}
 	str := strings.Join(lines, "\n")
 	member.Client.Connection.Write([]byte(str))
@@ -35,8 +35,8 @@ func (member Member) SendJoinMessage() {
 
 func (member Member) SendLeaveMessage() {
 	lines := []string{
-		"LEFT_CHATROOM: " + member.Chatroom.ID,
-		"JOIN_ID: " + member.ID + "\n\n",
+		"LEFT_CHATROOM:" + member.Chatroom.ID,
+		"JOIN_ID:" + member.ID + "\n\n",
 	}
 	str := strings.Join(lines, "\n")
 	member.Client.Connection.Write([]byte(str))
