@@ -17,7 +17,7 @@ func (member Member) SendMessage(m Message) {
 	lines := []string{
 		"CHAT:" + member.Chatroom.ID,
 		"CLIENT_NAME:" + m.Author.Name,
-		"MESSAGE:" + m.Text + "\n",
+		"MESSAGE:" + m.Text + "\n\n",
 	}
 	str := strings.Join(lines, "\n")
 	fmt.Println("Message:", str)
