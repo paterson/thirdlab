@@ -6,7 +6,7 @@ import (
 
 type Client struct {
 	Connection net.Conn
-	Name string
+	Name       string
 }
 
 func (client Client) Disconnect() {

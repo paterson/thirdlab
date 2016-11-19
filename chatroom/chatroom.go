@@ -1,8 +1,8 @@
 package chatroom
 
 import (
-	"strconv"
 	"errors"
+	"strconv"
 )
 
 type Chatroom struct {
@@ -35,7 +35,7 @@ func (chatroom *Chatroom) removeClient(c Client) {
 		member.SendLeaveMessage()
 		var message = Message{ChatroomID: chatroom.ID, Author: ChatroomBot, Text: c.Name + " has left the room"}
 		chatroom.broadcast(message) // Send message to chatroom that client has been left
-	}	
+	}
 }
 
 func (chatroom Chatroom) memberExistsWithClient(c Client) bool {
@@ -59,15 +59,15 @@ func (chatroom Chatroom) findMemberByClient(c Client) (Member, error) {
 func (chatroom Chatroom) wait() {
 	for action := range chatroom.Actions {
 		switch action.actionType() {
-			case MessageActionType:
-				message := action.(Message)
-				chatroom.broadcast(message)
-			case JoinRequestActionType:
-				joinRequest := action.(JoinRequest)
-				chatroom.addClient(joinRequest.Client)
-			case LeaveRequestActionType:
-				leaveRequest := action.(LeaveRequest)
-				chatroom.removeClient(leaveRequest.Client)
+		case MessageActionType:
+			message := action.(Message)
+			chatroom.broadcast(message)
+		case JoinRequestActionType:
+			joinRequest := action.(JoinRequest)
+			chatroom.addClient(joinRequest.Client)
+		case LeaveRequestActionType:
+			leaveRequest := action.(LeaveRequest)
+			chatroom.removeClient(leaveRequest.Client)
 		}
-	} 	
+	}
 }

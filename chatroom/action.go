@@ -5,12 +5,13 @@ import (
 )
 
 type ActionType int
+
 const (
-		MessageActionType ActionType = iota
-    JoinRequestActionType
-    LeaveRequestActionType
-    DisconnectRequestActionType
-    ErrorOccuredActionType
+	MessageActionType ActionType = iota
+	JoinRequestActionType
+	LeaveRequestActionType
+	DisconnectRequestActionType
+	ErrorOccuredActionType
 )
 
 type Action interface {
@@ -19,15 +20,20 @@ type Action interface {
 
 // Create appropriate Message, Join Request or LeaveRequest from input
 func NewAction(input string, client Client) Action {
-	dict       := inputToDictionary(input)
+	dict := inputToDictionary(input)
 	actionType := actionTypeFromDictionary(dict)
 	client.Name = dict["CLIENT_NAME"] // Update Client's name every time
 	switch actionType {
-		case MessageActionType:           return Message{ChatroomID: dict["CHAT"], Text: dict["MESSAGE"], Author: client}
-		case JoinRequestActionType:       return JoinRequest{ChatroomName: dict["JOIN_CHATROOM"], Client: client}
-		case LeaveRequestActionType:      return LeaveRequest{ChatroomID: dict["LEAVE_CHATROOM"], Client: client}
-		case DisconnectRequestActionType: return DisconnectRequest{Client: client}
-		default:                          return nil // fail
+	case MessageActionType:
+		return Message{ChatroomID: dict["CHAT"], Text: dict["MESSAGE"], Author: client}
+	case JoinRequestActionType:
+		return JoinRequest{ChatroomName: dict["JOIN_CHATROOM"], Client: client}
+	case LeaveRequestActionType:
+		return LeaveRequest{ChatroomID: dict["LEAVE_CHATROOM"], Client: client}
+	case DisconnectRequestActionType:
+		return DisconnectRequest{Client: client}
+	default:
+		return nil // fail
 	}
 }
 
@@ -36,13 +42,13 @@ func NewAction(input string, client Client) Action {
 // To:
 //        ["JOINED_CHATROOM": chatroom_name, "SERVER_IP": IP_address]
 func inputToDictionary(input string) map[string]string {
-	dict  := make(map[string]string)
+	dict := make(map[string]string)
 	lines := strings.Split(input, ",")
 	for _, line := range lines {
 		segments := strings.Split(line, ":")
 		if len(segments) > 1 {
-	 		dict[strings.TrimSpace(segments[0])] = strings.TrimSpace(segments[1])
-	 	}
+			dict[strings.TrimSpace(segments[0])] = strings.TrimSpace(segments[1])
+		}
 	}
 	return dict
 }

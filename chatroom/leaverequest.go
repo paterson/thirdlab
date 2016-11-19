@@ -2,7 +2,7 @@ package chatroom
 
 type LeaveRequest struct {
 	ChatroomID string
-	Client Client
+	Client     Client
 }
 
 func (l LeaveRequest) actionType() ActionType {

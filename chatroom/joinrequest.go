@@ -2,7 +2,7 @@ package chatroom
 
 type JoinRequest struct {
 	ChatroomName string
-	Client Client
+	Client       Client
 }
 
 func (j JoinRequest) actionType() ActionType {

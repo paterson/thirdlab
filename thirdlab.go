@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"github.com/paterson/secondlab/httpserver"
 	"github.com/paterson/thirdlab/chatroom"
+	"os"
 )
 
 var chatroomManager chatroom.ChatroomManager
@@ -15,7 +15,7 @@ func main() {
 	checkError(err)
 
 	chatroomManager = chatroom.NewChatroomManager()
-	
+
 	for {
 		connection, err := listener.Accept() // Accept incoming connection
 		checkError(err)
