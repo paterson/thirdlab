@@ -43,6 +43,7 @@ func (manager ChatroomManager) pollClient(client Client) {
 	connected := true
 	for connected {
 		input, err := httpserver.Read(client.Connection)
+		fmt.Println("Read:", input, err)
 		if strings.TrimSpace(input) != "" {
 			fmt.Println("Received:", strings.TrimSpace(input))
 			manager.input <- Input{Text: strings.TrimSpace(input), Client: client}
