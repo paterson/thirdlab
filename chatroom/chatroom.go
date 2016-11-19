@@ -3,6 +3,7 @@ package chatroom
 import (
 	"errors"
 	"strconv"
+	"fmt"
 )
 
 type Chatroom struct {
