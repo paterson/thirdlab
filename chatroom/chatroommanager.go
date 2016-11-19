@@ -85,10 +85,10 @@ func (manager *ChatroomManager) findChatroomForAction(action Action) (Chatroom, 
 
 func (manager *ChatroomManager) createNewChatroom(joinRequest JoinRequest) Chatroom {
 	chatroom := Chatroom{
-					Name: joinRequest.ChatroomName,
-					ID: strconv.Itoa(len(manager.chatrooms)),
-					Actions: make(chan Action),
-				}
+		Name: joinRequest.ChatroomName,
+		ID: strconv.Itoa(len(manager.chatrooms)),
+		Actions: make(chan Action),
+	}
 	go chatroom.wait()
 	manager.chatrooms = append(manager.chatrooms, chatroom)
 	fmt.Println("Created new chatroom", chatroom.Name)
