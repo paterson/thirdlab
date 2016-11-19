@@ -35,9 +35,9 @@ func (chatroom *Chatroom) addClient(c Client) {
 func (chatroom *Chatroom) removeClient(c Client) {
 	fmt.Println("Removing Client")
 	if chatroom.memberExistsWithClient(c) {
-		chatroom.deleteMemberByClient(c)
 		member, _ := chatroom.findMemberByClient(c)
 		member.SendLeaveMessage()
+		chatroom.deleteMemberByClient(c)
 		var message = Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has left this chatroom."}
 		chatroom.broadcast(message) // Send message to chatroom that client has been left
 	}

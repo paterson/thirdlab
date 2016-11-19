@@ -30,7 +30,6 @@ func NewAction(input string, client Client) Action {
 	case JoinRequestActionType:
 		return JoinRequest{ChatroomName: dict["JOIN_CHATROOM"], Client: client}
 	case LeaveRequestActionType:
-		fmt.Println("Action type: Leave")
 		return LeaveRequest{ChatroomID: dict["LEAVE_CHATROOM"], Client: client}
 	case DisconnectRequestActionType:
 		return DisconnectRequest{Client: client}
