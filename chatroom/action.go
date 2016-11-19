@@ -43,7 +43,7 @@ func NewAction(input string, client Client) Action {
 //        ["JOINED_CHATROOM": chatroom_name, "SERVER_IP": IP_address]
 func inputToDictionary(input string) map[string]string {
 	dict := make(map[string]string)
-	lines := strings.Split(input, "\n")
+	lines := strings.Split(input, "\\n")
 	for _, line := range lines {
 		segments := strings.Split(line, ":")
 		if len(segments) > 1 {

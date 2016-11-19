@@ -18,10 +18,7 @@ func (member Member) SendMessage(m Message) {
 		"CLIENT_NAME: " + m.Author.Name,
 		"MESSAGE: " + m.Text + "\n\n",
 	}
-	str := color.MagentaString(strings.Join(lines, "\n"))
-	if member.Client == m.Author {
-		str = color.CyanString(strings.Join(lines, "\n")) // Highlight differently for author
-	}
+	str := strings.Join(lines, "\n")
 	member.Client.Connection.Write([]byte(str))
 }
 
@@ -33,7 +30,7 @@ func (member Member) SendJoinMessage() {
 		"ROOM_REF: " + member.Chatroom.ID,
 		"JOIN_ID: " + member.ID + "\n\n",
 	}
-	str := color.GreenString(strings.Join(lines, "\n"))
+	str := strings.Join(lines, "\n")
 	member.Client.Connection.Write([]byte(str))
 }
 
@@ -42,6 +39,6 @@ func (member Member) SendLeaveMessage() {
 		"LEFT_CHATROOM: " + member.Chatroom.ID,
 		"JOIN_ID: " + member.ID + "\n\n",
 	}
-	str := color.RedString(strings.Join(lines, "\n"))
+	str := strings.Join(lines, "\n")
 	member.Client.Connection.Write([]byte(str))
 }
