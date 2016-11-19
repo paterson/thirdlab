@@ -29,6 +29,7 @@ func (chatroom *Chatroom) addClient(c Client) {
 }
 
 func (chatroom *Chatroom) removeClient(c Client) {
+	fmt.Println("Removing Client")
 	if chatroom.memberExistsWithClient(c) {
 		//chatroom.Clients // remove...
 		member, _ := chatroom.findMemberByClient(c)

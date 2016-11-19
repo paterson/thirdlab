@@ -111,7 +111,7 @@ func (manager *ChatroomManager) createNewChatroom(joinRequest JoinRequest) Chatr
 
 // Handle HELO text and KILL_SERVICE requests here outside the main operation
 // as they are different in nature and structure
-func (manager *ChatroomManager) handleAuxiliaryRequests(input Input) bool {
+func (manager ChatroomManager) handleAuxiliaryRequests(input Input) bool {
 	if strings.HasPrefix(input.Text, HELO_TEXT) {
 		suffix := input.Text[len(HELO_TEXT):len(input.Text)]
 		response := fmt.Sprintf("HELO %s\nIP:10.62.0.92\nPort:%s\nStudentID:12305503\n", suffix, httpserver.Port())
