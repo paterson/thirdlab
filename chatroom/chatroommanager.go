@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/paterson/secondlab/httpserver"
-	"io"
 	"net"
 	"os"
 	"strconv"
