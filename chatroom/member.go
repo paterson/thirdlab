@@ -3,6 +3,7 @@ package chatroom
 import (
 	"github.com/paterson/secondlab/httpserver"
 	"strings"
+	"fmt"
 )
 
 type Member struct {
@@ -12,6 +13,7 @@ type Member struct {
 }
 
 func (member Member) SendMessage(m Message) {
+	fmt.Println("Sending Chat Message")
 	lines := []string{
 		"CHAT:" + member.Chatroom.ID,
 		"CLIENT_NAME:" + m.Author.Name,
