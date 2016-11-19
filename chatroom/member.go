@@ -19,7 +19,8 @@ func (member Member) SendMessage(m Message) {
 		"CLIENT_NAME:" + m.Author.Name,
 		"MESSAGE:" + m.Text + "\n\n",
 	}
-	str := strings.Join(lines, "\n")
+	str := strings.Join(lines, "[n]")
+	fmt.Println("Message:", str)
 	member.Client.Connection.Write([]byte(str))
 }
 
