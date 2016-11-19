@@ -23,8 +23,8 @@ func (chatroom *Chatroom) addClient(c Client) {
 		member := Member{Client: c, Chatroom: *chatroom, ID: strconv.Itoa(len(chatroom.Members))}
 		chatroom.Members = append(chatroom.Members, member)
 		member.SendJoinMessage()
-		announcement := Message{ChatroomID: chatroom.ID, Author: ChatroomBot, Text: c.Name + " has joined the room"}
-		chatroom.broadcast(announcement) // Send message to chatroom that client has been added
+		//announcement := Message{ChatroomID: chatroom.ID, Author: ChatroomBot, Text: c.Name + " has joined the room"}
+		//chatroom.broadcast(announcement) // Send message to chatroom that client has been added
 	}
 }
 
