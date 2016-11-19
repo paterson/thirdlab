@@ -42,12 +42,13 @@ func (manager *ChatroomManager) HasNewConnection(conn net.Conn) {
 func (manager ChatroomManager) pollClient(client Client) {
 	connected := true
 	for connected {
+		fmt.Println("Waiting for input..")
 		input, err := httpserver.Read(client.Connection)
 		if strings.TrimSpace(input) != "" {
 			fmt.Println("Received:", strings.TrimSpace(input))
 			manager.input <- Input{Text: strings.TrimSpace(input), Client: client}
 		}
-		//connected = err == nil // Check if client is disconnected
+		connected = err == nil // Check if client is disconnected
 	}
 }
 
