@@ -27,6 +27,7 @@ func (chatroom *Chatroom) addClient(c Client) {
 		announcement := Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has joined this chatroom."}
 		chatroom.broadcast(announcement) // Send message to chatroom that client has been added
 	} else {
+		member, _ := chatroom.findMemberByClient(c)
 		member.SendErrorMessage("1", "Client is already in this chatroom")
 	}
 }
