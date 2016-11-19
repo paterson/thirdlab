@@ -27,7 +27,7 @@ func (member Member) SendMessage(m Message) {
 
 func (member Member) SendJoinMessage() {
 	lines := []string{
-		"JOINED_CHATROOM: " + member.Chatroom.Name,
+		"JOINED_CHATROOM:" + member.Chatroom.Name,
 		"SERVER_IP: " + httpserver.IPAddress(),
 		"PORT: " + httpserver.Port(),
 		"ROOM_REF: " + member.Chatroom.ID,
