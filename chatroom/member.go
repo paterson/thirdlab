@@ -45,7 +45,7 @@ func (member Member) SendLeaveMessage() {
 	member.Client.Connection.Write([]byte(str))
 }
 
-func (member Member) SendErrorMessage(code int, message string) {
+func (member Member) SendErrorMessage(code string, message string) {
 	lines := []string{
 		"ERROR_CODE:" + code,
 		"ERROR_DESCRIPTION:" + message,
