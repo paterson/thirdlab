@@ -1,7 +1,6 @@
 package chatroom
 
 import (
-	"github.com/fatih/color"
 	"github.com/paterson/secondlab/httpserver"
 	"strings"
 )
