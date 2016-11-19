@@ -17,9 +17,9 @@ func (member Member) SendMessage(m Message) {
 	lines := []string{
 		"CHAT:" + member.Chatroom.ID,
 		"CLIENT_NAME:" + m.Author.Name,
-		"MESSAGE:" + m.Text + "\n\n",
+		"MESSAGE:" + m.Text + "\n",
 	}
-	str := strings.Join(lines, "[n]")
+	str := strings.Join(lines, "\n")
 	fmt.Println("Message:", str)
 	member.Client.Connection.Write([]byte(str))
 }
@@ -30,7 +30,7 @@ func (member Member) SendJoinMessage() {
 		"SERVER_IP:" + httpserver.IPAddress(),
 		"PORT:" + httpserver.Port(),
 		"ROOM_REF:" + member.Chatroom.ID,
-		"JOIN_ID:" + member.ID + "\n\n",
+		"JOIN_ID:" + member.ID + "\n",
 	}
 	str := strings.Join(lines, "\n")
 	member.Client.Connection.Write([]byte(str))
@@ -39,7 +39,7 @@ func (member Member) SendJoinMessage() {
 func (member Member) SendLeaveMessage() {
 	lines := []string{
 		"LEFT_CHATROOM:" + member.Chatroom.ID,
-		"JOIN_ID:" + member.ID + "\n\n",
+		"JOIN_ID:" + member.ID + "\n",
 	}
 	str := strings.Join(lines, "\n")
 	member.Client.Connection.Write([]byte(str))
