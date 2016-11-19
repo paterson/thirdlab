@@ -27,12 +27,15 @@ func (chatroom *Chatroom) addClient(c Client) {
 		announcement := Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has joined this chatroom."}
 		chatroom.broadcast(announcement) // Send message to chatroom that client has been added
 	}
+	else {
+		member.SendErrorMessage(1, "Client is already in this chatroom")
+	}
 }
 
 func (chatroom *Chatroom) removeClient(c Client) {
 	fmt.Println("Removing Client")
 	if chatroom.memberExistsWithClient(c) {
-		//chatroom.Clients // remove...
+		chatroom.deleteMemberByClient(c)
 		member, _ := chatroom.findMemberByClient(c)
 		member.SendLeaveMessage()
 		var message = Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has left this chatroom."}
@@ -56,6 +59,22 @@ func (chatroom Chatroom) findMemberByClient(c Client) (Member, error) {
 		}
 	}
 	return Member{}, errors.New("Not found")
+}
+
+func (chatroom *Chatroom) deleteMemberByClient(c Client) {
+	index := -1
+	for i, member := range chatroom.Members {
+		if member.Client == c {
+			index = i
+		}
+	}
+
+	// If the client is indeed a member
+	if index >= 0 {
+		// Remove member
+		chatroom.Members[index] = chatroom.Members[len(chatroom.Members)-1]
+		chatroom.Members = chatroom.Members[:len(chatroom.Members)-1]
+	}
 }
 
 func (chatroom Chatroom) wait() {
