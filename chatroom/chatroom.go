@@ -23,7 +23,7 @@ func (chatroom *Chatroom) addClient(c Client) {
 		member := Member{Client: c, Chatroom: *chatroom, ID: strconv.Itoa(len(chatroom.Members))}
 		chatroom.Members = append(chatroom.Members, member)
 		member.SendJoinMessage()
-		announcement := Message{ChatroomID: chatroom.ID, Author: ChatroomBot, Text: c.Name + " has joined the room"}
+		announcement := Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has joined the room"}
 		chatroom.broadcast(announcement) // Send message to chatroom that client has been added
 	}
 }
@@ -33,7 +33,7 @@ func (chatroom *Chatroom) removeClient(c Client) {
 		//chatroom.Clients // remove...
 		member, _ := chatroom.findMemberByClient(c)
 		member.SendLeaveMessage()
-		var message = Message{ChatroomID: chatroom.ID, Author: ChatroomBot, Text: c.Name + " has left the room"}
+		var message = Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has left the room"}
 		chatroom.broadcast(message) // Send message to chatroom that client has been left
 	}
 }

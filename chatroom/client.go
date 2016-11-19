@@ -12,5 +12,3 @@ type Client struct {
 func (client Client) Disconnect() {
 	client.Connection.Close()
 }
-
-var ChatroomBot = Client{Name: "Chatroom Bot 🤖  "}
