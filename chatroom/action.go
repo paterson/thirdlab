@@ -6,11 +6,11 @@ import (
 
 type ActionType int
 const (
-        MessageActionType ActionType = iota
-        JoinRequestActionType
-        LeaveRequestActionType
-        DisconnectRequestActionType
-        ErrorOccuredActionType
+		MessageActionType ActionType = iota
+    JoinRequestActionType
+    LeaveRequestActionType
+    DisconnectRequestActionType
+    ErrorOccuredActionType
 )
 
 type Action interface {
@@ -19,7 +19,7 @@ type Action interface {
 
 // Create appropriate Message, Join Request or LeaveRequest from input
 func NewAction(input string, client Client) Action {
-	dict := inputToDictionary(input)
+	dict       := inputToDictionary(input)
 	actionType := actionTypeFromDictionary(dict)
 	client.Name = dict["CLIENT_NAME"] // Update Client's name every time
 	switch actionType {
@@ -33,10 +33,10 @@ func NewAction(input string, client Client) Action {
 
 // Convert JOINED_CHATROOM: chatroom_name
 // 								SERVER_IP: IP_address
-// To: 
+// To:
 //        ["JOINED_CHATROOM": chatroom_name, "SERVER_IP": IP_address]
 func inputToDictionary(input string) map[string]string {
-	dict := make(map[string]string)
+	dict  := make(map[string]string)
 	lines := strings.Split(input, ",")
 	for _, line := range lines {
 		segments := strings.Split(line, ":")
@@ -51,7 +51,7 @@ func actionTypeFromDictionary(dict map[string]string) ActionType {
 	if dict["JOIN_CHATROOM"] != "" {
 		return JoinRequestActionType
 	} else if dict["LEAVE_CHATROOM"] != "" {
-		return LeaveRequestActionType	
+		return LeaveRequestActionType
 	} else if dict["DISCONNECT"] != "" {
 		return DisconnectRequestActionType
 	} else if dict["CHAT"] != "" {
