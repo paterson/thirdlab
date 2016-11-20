@@ -88,7 +88,7 @@ func (manager ChatroomManager) handleDisconnectionRequest(client Client) {
 	var wg sync.WaitGroup
 	for _, chatroom := range manager.chatrooms {
 		wg.Add(1)
-		action := DisconnectRequest{Client: client, wg: wg}
+		action := DisconnectRequest{Client: client, wg: &wg}
 		chatroom.Actions <- action
 		wg.Wait()
 	}
