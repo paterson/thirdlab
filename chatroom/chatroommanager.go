@@ -74,12 +74,8 @@ func (manager ChatroomManager) waitForInput() {
 // Disconnect the client
 func (manager ChatroomManager) handleDisconnectionRequest(client Client) {
 	for _, chatroom := range manager.chatrooms {
-		for _, member := range chatroom.Members {
-			if member.Client == client { // if client is member
-				action := DisconnectRequest{Client: client}
-				chatroom.Actions <- action
-			}
-		}
+		action := DisconnectRequest{Client: client}
+		chatroom.Actions <- action
 	}
 	client.Disconnect()
 }
