@@ -57,7 +57,8 @@ func (manager ChatroomManager) waitForInput() {
 		if proceed {
 			action := NewAction(input.Text, input.Client)
 			if action != nil && action.actionType() == DisconnectRequestActionType {
-				manager.handleDisconnectionRequest(input.Client)
+				disconnectRequest := action.(DisconnectRequest)
+				manager.handleDisconnectionRequest(disconnectRequest.Client)
 			} else if action != nil {
 				chatroom, err := manager.findChatroomForAction(action)
 				if err == nil {
@@ -70,8 +71,7 @@ func (manager ChatroomManager) waitForInput() {
 
 // Handle Disconnection Request.
 // First find all chatrooms that the client is a member of
-// Broadcast to each that the client has disconnected
-// Disconnect the client
+// Create Disconnect requests for *each* chatroom
 func (manager ChatroomManager) handleDisconnectionRequest(client Client) {
 	for _, chatroom := range manager.chatrooms {
 		action := DisconnectRequest{Client: client}
