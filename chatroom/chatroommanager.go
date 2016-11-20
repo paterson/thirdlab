@@ -23,7 +23,7 @@ type Input struct {
 
 type ChatroomManager struct {
 	chatrooms []Chatroom
-	Clients   []Client
+	clients   []Client
 	input     chan Input
 }
 
@@ -35,8 +35,8 @@ func NewChatroomManager() ChatroomManager {
 
 func (manager *ChatroomManager) HasNewConnection(conn net.Conn) {
 	client := Client{Connection: conn}
-	manager.Clients = append(manager.Clients, client)
 	fmt.Println("New Client Connected")
+	manager.clients = append(manager.clients, client)
 	go manager.pollClient(client)
 }
 
@@ -101,11 +101,11 @@ func (manager ChatroomManager) handleAuxiliaryRequests(input Input) bool {
 	if strings.HasPrefix(input.Text, HELO_TEXT) {
 		suffix := input.Text[len(HELO_TEXT):len(input.Text)]
 		response := fmt.Sprintf("HELO %s\nIP:10.62.0.92\nPort:%s\nStudentID:12305503\n", suffix, httpserver.Port())
-		input.Client.Connection.Write([]byte(response))
-		input.Client.Connection.Close()
+		input.Client.SendMessage(response)
+		input.Client.Disconnect()
 		return false
 	} else if input.Text == KILL_SERVICE {
-		input.Client.Connection.Close()
+		input.Client.Disconnect()
 		os.Exit(0)
 		return false
 	}

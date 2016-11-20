@@ -8,14 +8,13 @@ import (
 
 type Member struct {
 	Client   Client
-	Chatroom Chatroom
-	ID       string
+	chatroom Chatroom
+	id       string
 }
 
 func (member Member) SendMessage(m Message) {
-	fmt.Println("Sending Chat Message")
 	lines := []string{
-		"CHAT:" + member.Chatroom.ID,
+		"CHAT:" + member.chatroom.ID,
 		"CLIENT_NAME:" + m.Author.Name,
 		"MESSAGE:" + m.Text + "\n\n",
 	}
@@ -25,11 +24,11 @@ func (member Member) SendMessage(m Message) {
 
 func (member Member) SendJoinMessage() {
 	lines := []string{
-		"JOINED_CHATROOM:" + member.Chatroom.Name,
+		"JOINED_CHATROOM:" + member.chatroom.Name,
 		"SERVER_IP:" + httpserver.IPAddress(),
 		"PORT:" + httpserver.Port(),
-		"ROOM_REF:" + member.Chatroom.ID,
-		"JOIN_ID:" + member.ID + "\n",
+		"ROOM_REF:" + member.chatroom.ID,
+		"JOIN_ID:" + member.id + "\n",
 	}
 	str := strings.Join(lines, "\n")
 	member.Client.SendMessage(str)
@@ -37,8 +36,8 @@ func (member Member) SendJoinMessage() {
 
 func (member Member) SendLeaveMessage() {
 	lines := []string{
-		"LEFT_CHATROOM:" + member.Chatroom.ID,
-		"JOIN_ID:" + member.ID + "\n",
+		"LEFT_CHATROOM:" + member.chatroom.ID,
+		"JOIN_ID:" + member.id + "\n",
 	}
 	str := strings.Join(lines, "\n")
 	member.Client.SendMessage(str)
