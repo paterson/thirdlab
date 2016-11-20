@@ -33,13 +33,12 @@ func (chatroom *Chatroom) addClient(c Client) {
 }
 
 func (chatroom *Chatroom) removeClient(c Client) {
-	fmt.Println("Removing Client")
 	if chatroom.memberExistsWithClient(c) {
 		member, _ := chatroom.findMemberByClient(c)
 		member.SendLeaveMessage()
-		chatroom.deleteMemberByClient(c)
-		var message = Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has left this chatroom."}
+		message := Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has left this chatroom."}
 		chatroom.broadcast(message) // Send message to chatroom that client has been left
+		chatroom.deleteMemberByClient(c)
 	}
 }
 
@@ -69,9 +68,8 @@ func (chatroom *Chatroom) deleteMemberByClient(c Client) {
 		}
 	}
 
-	// If the client is indeed a member
+	// If the client is indeed a member, delete them
 	if index >= 0 {
-		// Remove member
 		chatroom.Members[index] = chatroom.Members[len(chatroom.Members)-1]
 		chatroom.Members = chatroom.Members[:len(chatroom.Members)-1]
 	}
