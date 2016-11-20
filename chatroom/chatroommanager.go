@@ -76,7 +76,7 @@ func (manager ChatroomManager) handleDisconnectionRequest(client Client) {
 	for _, chatroom := range manager.chatrooms {
 		for _, member := range chatroom.Members {
 			if member.Client == client { // if client is member
-				chatroom.Disconnect(Client)
+				chatroom.DisconnectClient(client)
 			}
 		}
 	}
