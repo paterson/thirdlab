@@ -73,14 +73,25 @@ func (manager ChatroomManager) waitForInput() {
 // Handle Disconnection Request.
 // First find all chatrooms that the client is a member of
 // Create Disconnect requests for *each* chatroom
+
+// Stephen Barrett's tests expect the disconnecting client to receive the messages in order.
+// I.e:
+// 		CHAT: 0
+//      ...
+// Then:
+// 		CHAT: 1
+//      ...
+// But it would be logical to do these seperately in the chatroom's thread and let them come back in any order, but..
+// So instead of have the wg.Wait() outside the for loop (to ensure the client is only disconnected after all messages are sent)
+// We need to put it inside the for loop so we wait for every chatroom... This is pretty annoying.
 func (manager ChatroomManager) handleDisconnectionRequest(client Client) {
 	var wg sync.WaitGroup
 	for _, chatroom := range manager.chatrooms {
 		wg.Add(1)
 		action := DisconnectRequest{Client: client, wg: wg}
 		chatroom.Actions <- action
+		wg.Wait()
 	}
-	wg.Wait()
 	client.Disconnect() // Disconnect after all chatrooms have sent their messages
 }
 
