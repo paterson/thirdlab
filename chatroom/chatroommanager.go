@@ -57,7 +57,7 @@ func (manager ChatroomManager) waitForInput() {
 		if proceed {
 			action := NewAction(input.Text, input.Client)
 			if action != nil && action.actionType() == DisconnectRequestActionType {
-				input.Client.Disconnect()
+				manager.handleDisconnectionRequest(input.Client)
 			} else if action != nil {
 				chatroom, err := manager.findChatroomForAction(action)
 				if err == nil {
@@ -67,6 +67,39 @@ func (manager ChatroomManager) waitForInput() {
 		}
 	}
 }
+
+// Handle Disconnection Request.
+// First find all chatrooms that the client is a member of
+// Broadcast to each that the client has disconnected
+// Disconnect the client
+func (manager ChatroomManager) handleDisconnectionRequest(client Client) {
+	for _, chatroom := range manager.chatrooms {
+		for _, member := range chatroom.Members {
+			if member.Client == client { // if client is member
+				chatroom.Disconnect(Client)
+			}
+		}
+	}
+	client.Disconnect()
+}
+
+// Handle HELO text and KILL_SERVICE requests here outside the main operation
+// as they are different in nature and structure
+func (manager ChatroomManager) handleAuxiliaryRequests(input Input) bool {
+	if strings.HasPrefix(input.Text, HELO_TEXT) {
+		suffix := input.Text[len(HELO_TEXT):len(input.Text)]
+		response := fmt.Sprintf("HELO %s\nIP:10.62.0.92\nPort:%s\nStudentID:12305503\n", suffix, httpserver.Port())
+		input.Client.Connection.Write([]byte(response))
+		input.Client.Connection.Close()
+		return false
+	} else if input.Text == KILL_SERVICE {
+		input.Client.Connection.Close()
+		os.Exit(0)
+		return false
+	}
+	return true
+}
+
 
 func (manager *ChatroomManager) findChatroomForAction(action Action) (Chatroom, error) {
 	if action.actionType() == JoinRequestActionType {
@@ -106,21 +139,4 @@ func (manager *ChatroomManager) createNewChatroom(joinRequest JoinRequest) Chatr
 	manager.chatrooms = append(manager.chatrooms, chatroom)
 	fmt.Println("Created new chatroom", chatroom.Name)
 	return chatroom
-}
-
-// Handle HELO text and KILL_SERVICE requests here outside the main operation
-// as they are different in nature and structure
-func (manager ChatroomManager) handleAuxiliaryRequests(input Input) bool {
-	if strings.HasPrefix(input.Text, HELO_TEXT) {
-		suffix := input.Text[len(HELO_TEXT):len(input.Text)]
-		response := fmt.Sprintf("HELO %s\nIP:10.62.0.92\nPort:%s\nStudentID:12305503\n", suffix, httpserver.Port())
-		input.Client.Connection.Write([]byte(response))
-		input.Client.Connection.Close()
-		return false
-	} else if input.Text == KILL_SERVICE {
-		input.Client.Connection.Close()
-		os.Exit(0)
-		return false
-	}
-	return true
 }

@@ -9,6 +9,10 @@ type Client struct {
 	Name       string
 }
 
+func (client Client) SendMessage(message string) {
+	client.Connection.Write([]byte(message))
+}
+
 func (client Client) Disconnect() {
 	client.Connection.Close()
 }

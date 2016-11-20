@@ -20,8 +20,7 @@ func (member Member) SendMessage(m Message) {
 		"MESSAGE:" + m.Text + "\n\n",
 	}
 	str := strings.Join(lines, "\n")
-	fmt.Println("Message:", str)
-	member.Client.Connection.Write([]byte(str))
+	member.Client.SendMessage(str)
 }
 
 func (member Member) SendJoinMessage() {
@@ -33,7 +32,7 @@ func (member Member) SendJoinMessage() {
 		"JOIN_ID:" + member.ID + "\n",
 	}
 	str := strings.Join(lines, "\n")
-	member.Client.Connection.Write([]byte(str))
+	member.Client.SendMessage(str)
 }
 
 func (member Member) SendLeaveMessage() {
@@ -42,7 +41,7 @@ func (member Member) SendLeaveMessage() {
 		"JOIN_ID:" + member.ID + "\n",
 	}
 	str := strings.Join(lines, "\n")
-	member.Client.Connection.Write([]byte(str))
+	member.Client.SendMessage(str)
 }
 
 func (member Member) SendErrorMessage(code string, message string) {
@@ -51,5 +50,5 @@ func (member Member) SendErrorMessage(code string, message string) {
 		"ERROR_DESCRIPTION:" + message,
 	}
 	str := strings.Join(lines, "\n")
-	member.Client.Connection.Write([]byte(str))
+	member.Client.SendMessage(str)
 }

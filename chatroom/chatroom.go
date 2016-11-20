@@ -3,7 +3,6 @@ package chatroom
 import (
 	"errors"
 	"strconv"
-	"fmt"
 )
 
 type Chatroom struct {
@@ -37,6 +36,14 @@ func (chatroom *Chatroom) removeClient(c Client) {
 		member, _ := chatroom.findMemberByClient(c)
 		member.SendLeaveMessage()
 		message := Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has left this chatroom."}
+		chatroom.broadcast(message) // Send message to chatroom that client has been left
+		chatroom.deleteMemberByClient(c)
+	}
+}
+
+func (chatroom *Chatroom) DisconnectClient() {
+	if chatroom.memberExistsWithClient(c) {
+		message := Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has disconnected from this chatroom."}
 		chatroom.broadcast(message) // Send message to chatroom that client has been left
 		chatroom.deleteMemberByClient(c)
 	}
