@@ -3,7 +3,6 @@ package chatroom
 import (
 	"github.com/paterson/secondlab/httpserver"
 	"strings"
-	"fmt"
 )
 
 type Member struct {

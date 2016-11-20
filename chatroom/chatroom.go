@@ -21,7 +21,7 @@ func (chatroom Chatroom) broadcast(m Message) {
 
 func (chatroom *Chatroom) addClient(c Client) {
 	if !chatroom.memberExistsWithClient(c) {
-		member := Member{Client: c, Chatroom: *chatroom, ID: strconv.Itoa(len(chatroom.Members))}
+		member := Member{Client: c, chatroom: *chatroom, id: strconv.Itoa(len(chatroom.Members))}
 		chatroom.Members = append(chatroom.Members, member)
 		member.SendJoinMessage()
 		announcement := Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has joined this chatroom."}
