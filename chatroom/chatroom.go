@@ -3,6 +3,7 @@ package chatroom
 import (
 	"errors"
 	"strconv"
+	"sync"
 )
 
 type Chatroom struct {
@@ -41,7 +42,8 @@ func (chatroom *Chatroom) removeClient(c Client) {
 	}
 }
 
-func (chatroom *Chatroom) disconnectClient(c Client) {
+func (chatroom *Chatroom) disconnectClient(c Client, wg sync.WaitGroup) {
+	defer wg.Done()
 	if chatroom.memberExistsWithClient(c) {
 		message := Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has disconnected from this chatroom."}
 		chatroom.broadcast(message) // Send message to chatroom that client has been left
@@ -96,7 +98,7 @@ func (chatroom Chatroom) wait() {
 			chatroom.removeClient(leaveRequest.Client)
 		case DisconnectRequestActionType:
 			disconnectRequest := action.(DisconnectRequest)
-			chatroom.disconnectClient(disconnectRequest.Client)
+			chatroom.disconnectClient(disconnectRequest.Client, disconnectRequest.wg)
 		}
 	}
 }

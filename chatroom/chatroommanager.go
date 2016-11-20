@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 const (
@@ -73,11 +74,14 @@ func (manager ChatroomManager) waitForInput() {
 // First find all chatrooms that the client is a member of
 // Create Disconnect requests for *each* chatroom
 func (manager ChatroomManager) handleDisconnectionRequest(client Client) {
+	var wg sync.WaitGroup
 	for _, chatroom := range manager.chatrooms {
-		action := DisconnectRequest{Client: client}
+		wg.Add(1)
+		action := DisconnectRequest{Client: client, wg: wg}
 		chatroom.Actions <- action
 	}
-	client.Disconnect()
+	wg.Wait()
+	client.Disconnect() // Disconnect after all chatrooms have sent their messages
 }
 
 // Handle HELO text and KILL_SERVICE requests here outside the main operation
