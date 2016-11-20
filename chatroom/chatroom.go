@@ -41,7 +41,7 @@ func (chatroom *Chatroom) removeClient(c Client) {
 	}
 }
 
-func (chatroom *Chatroom) DisconnectClient(c Client) {
+func (chatroom *Chatroom) disconnectClient(c Client) {
 	if chatroom.memberExistsWithClient(c) {
 		message := Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has disconnected from this chatroom."}
 		chatroom.broadcast(message) // Send message to chatroom that client has been left
@@ -94,6 +94,9 @@ func (chatroom Chatroom) wait() {
 		case LeaveRequestActionType:
 			leaveRequest := action.(LeaveRequest)
 			chatroom.removeClient(leaveRequest.Client)
+		case DisconnectRequestActionType:
+			disconnectRequest := action.(DisconnectRequest)
+			chatroom.disconnectClient(disconnectRequest.Client)
 		}
 	}
 }
