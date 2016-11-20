@@ -45,7 +45,7 @@ func (member Member) SendLeaveMessage() {
 func (member Member) SendErrorMessage(code string, message string) {
 	lines := []string{
 		"ERROR_CODE:" + code,
-		"ERROR_DESCRIPTION:" + message,
+		"ERROR_DESCRIPTION:" + message + "\n",
 	}
 	str := strings.Join(lines, "\n")
 	member.Client.SendMessage(str)

@@ -100,7 +100,7 @@ func (manager ChatroomManager) handleDisconnectionRequest(client Client) {
 func (manager ChatroomManager) handleAuxiliaryRequests(input Input) bool {
 	if strings.HasPrefix(input.Text, HELO_TEXT) {
 		suffix := input.Text[len(HELO_TEXT):len(input.Text)]
-		response := fmt.Sprintf("HELO %s\nIP:10.62.0.92\nPort:%s\nStudentID:12305503\n", suffix, httpserver.Port())
+		response := fmt.Sprintf("HELO %s\nIP:10.62.0.92\nPort:%s\nStudentID:12305503\n\n", suffix, httpserver.Port())
 		input.Client.SendMessage(response)
 		input.Client.Disconnect()
 		return false
