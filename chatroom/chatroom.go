@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strconv"
 	"sync"
+	"fmt"
 )
 
 type Chatroom struct {
@@ -14,12 +15,14 @@ type Chatroom struct {
 }
 
 func (chatroom Chatroom) broadcast(m Message) {
+	fmt.Println("User sent message to chatroom:", chatroom.Name, m.Author.Name, m.Text)
 	for _, member := range chatroom.Members {
 		member.SendMessage(m)
 	}
 }
 
 func (chatroom *Chatroom) addClient(c Client) {
+	fmt.Println("User joined chatroom:", chatroom.Name, c.Name)
 	if !chatroom.memberExistsWithClient(c) {
 		member := Member{Client: c, chatroom: *chatroom, id: strconv.Itoa(len(chatroom.Members))}
 		chatroom.Members = append(chatroom.Members, member)
@@ -33,6 +36,7 @@ func (chatroom *Chatroom) addClient(c Client) {
 }
 
 func (chatroom *Chatroom) removeClient(c Client) {
+	fmt.Println("User left chatroom:", chatroom.Name, c.Name)
 	if chatroom.memberExistsWithClient(c) {
 		member, _ := chatroom.findMemberByClient(c)
 		member.SendLeaveMessage()
@@ -44,6 +48,7 @@ func (chatroom *Chatroom) removeClient(c Client) {
 
 func (chatroom *Chatroom) disconnectClient(c Client, wg *sync.WaitGroup) {
 	defer wg.Done()
+	fmt.Println("User disconnected from chatroom:", chatroom.Name, c.Name)
 	if chatroom.memberExistsWithClient(c) {
 		message := Message{ChatroomID: chatroom.ID, Author: c, Text: c.Name + " has disconnected from this chatroom."}
 		chatroom.broadcast(message) // Send message to chatroom that client has been left
